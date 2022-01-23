@@ -4,6 +4,10 @@ import App from './App/App';
 import CustomLocalStorageManager from './utils/CustomLocalStorageManager';
 import './index.scss';
 import { setAuthorizationHeader } from './services/ApiClient';
+import configureStore from './redux/store';
+import { createBrowserHistory } from 'history';
+import { Provider } from 'react-redux';
+import { ConnectedRouter as Router } from 'connected-react-router';
 
 //Read data localStorage
 let accessToken = null;
@@ -13,10 +17,16 @@ if (CustomLocalStorageManager.getItem('token')) {
   setAuthorizationHeader(accessToken);
 }
 
+const history = createBrowserHistory();
+const store = configureStore({ auth: !!accessToken }, { history });
+
 ReactDOM.render(
   <React.StrictMode>
-    {/*Send info initial token in localStorage,*/}
-    <App hasAccessToken={!!accessToken} />
+    <Provider store={store}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
