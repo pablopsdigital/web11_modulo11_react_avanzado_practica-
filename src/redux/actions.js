@@ -31,7 +31,7 @@ export function loadAdverts() {
     }
     // dispatch loadAdvertsRequest
     try {
-      const adverts = await api.adverts.getLatestAdverts();
+      const adverts = await api.adverts.getAdvertisements();
       dispatch(advertsLoaded(adverts));
     } catch (error) {
       // dispatch loadAdvertsFailure

@@ -10,8 +10,11 @@ import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import { getAllTags } from '../../components/FiltersForm/FiltersService';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { useDispatch, useSelector } from 'react-redux';
 
 function NewAdvertPage({ ...props }) {
+  const dispatch = useDispatch();
+
   //Data
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
