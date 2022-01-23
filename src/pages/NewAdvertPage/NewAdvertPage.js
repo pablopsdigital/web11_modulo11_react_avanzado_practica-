@@ -9,12 +9,13 @@ import { Redirect } from 'react-router-dom';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import { getAllTags } from '../../components/FiltersForm/FiltersService';
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAdvert } from '../../redux/actions';
 
 function NewAdvertPage({ ...props }) {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   //Data
   const [isLoading, setIsLoading] = useState(true);

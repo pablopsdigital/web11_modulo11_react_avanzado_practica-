@@ -97,6 +97,7 @@ export function deleteAdvert(advertId) {
         type: ADVERT_DELETED_SUCCESS,
         payload: advert
       });
+      history.push('/');
     } catch (error) {
       dispatch({ type: ADVERT_DELETED_FAIL, error: true, payload: error });
     }

@@ -14,18 +14,16 @@ import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAdvert, loadAdvert } from '../../redux/actions';
-import { getAdvert } from '../../redux/selectors';
+import { getAdvert, getAdverts } from '../../redux/selectors';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 
 const { formatDistanceToNow } = require('date-fns');
 
 function AdvertPage({ match, ...props }) {
   //Params
-  // const advertisementId = match.params.advertId;
-  const { advertId } = useParams();
-
+  const advertId = match.params.advertId;
   const history = useHistory();
-  const dispatch = useDispatch();
+  // const { advertId } = useParams();
 
   //Modal control
   const [modalConfirm, setConfirm] = useState(false);
@@ -33,23 +31,22 @@ function AdvertPage({ match, ...props }) {
     setConfirm(modalConfirm ? false : true);
   };
 
+  //Load data
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loadAdvert(advertId));
   }, [dispatch, advertId]);
 
-  //Data
-  const advertisement = useSelector(getAdvert);
-  console.log(advertisement);
+  const advertisement = useSelector((state) => getAdvert(state, advertId));
 
   const handleDelete = () => {
-    deleteAdvertisementId(advertId);
-    // dispatch(deleteAdvert(advertisementId));
+    dispatch(deleteAdvert(advertId));
+    setConfirm(false);
     history.push('/');
   };
 
   return (
     <Layout {...props}>
-      <p>{advertisement}</p>
       <section id="advert-page">
         <div className="container">
           {advertisement ? (
