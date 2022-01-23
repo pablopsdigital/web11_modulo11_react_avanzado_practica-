@@ -6,7 +6,16 @@ import {
   USER_AUTH_LOGIN_FAIL,
   USER_AUTH_LOGIN_REQUEST,
   USER_AUTH_LOGIN_SUCCESS,
-  USER_AUTH_LOGOUT
+  USER_AUTH_LOGOUT,
+  ADVERTS_LOADED_REQUEST,
+  ADVERTS_LOADED_FAIL,
+  ADVERT_LOADED_REQUEST,
+  ADVERT_CREATED_FAIL,
+  ADVERT_LOADED_FAIL,
+  ADVERT_CREATED_REQUEST,
+  ADVERT_DELETED_REQUEST,
+  ADVERT_DELETED_SUCCESS,
+  ADVERT_DELETED_FAIL
 } from './constants';
 
 import { areAdvertsLoaded, getAdverts } from './selectors';
@@ -17,32 +26,21 @@ export function uiResetError() {
   };
 }
 
-export function advertsLoaded(adverts) {
-  return {
-    type: ADVERTS_LOADED_SUCCESS,
-    payload: adverts
-  };
-}
-
 export function loadAdverts() {
   return async function (dispatch, getState, { api }) {
     if (areAdvertsLoaded(getState())) {
       return;
     }
-    // dispatch loadAdvertsRequest
+    dispatch({ type: ADVERTS_LOADED_REQUEST });
     try {
-      const adverts = await api.adverts.getAdvertisements();
-      dispatch(advertsLoaded(adverts));
+      const adverts = await api.getAdvertisements();
+      dispatch({
+        type: ADVERTS_LOADED_SUCCESS,
+        payload: adverts
+      });
     } catch (error) {
-      // dispatch loadAdvertsFailure
+      dispatch({ type: ADVERTS_LOADED_FAIL, error: true, payload: error });
     }
-  };
-}
-
-export function advertLoaded(advert) {
-  return {
-    type: ADVERT_LOADED_SUCCESS,
-    payload: advert
   };
 }
 
@@ -52,75 +50,73 @@ export function loadAdvert(advertId) {
     if (advert) {
       return;
     }
-    // dispatch loadAdvertRequest
+    dispatch({ type: ADVERT_LOADED_REQUEST });
     try {
-      const advert = await api.adverts.getAdvert(advertId);
-      dispatch(advertLoaded(advert));
+      const advert = await api.getAdvertisementId(advertId);
+      dispatch({
+        type: ADVERT_LOADED_SUCCESS,
+        payload: advert
+      });
     } catch (error) {
-      // dispatch(loadAdvertFailure(error));
-      // if (error.status === 404) {
-      //   history.push('/404');
-      // }
+      dispatch({ type: ADVERT_LOADED_FAIL, error: true, payload: error });
+      if (error.status === 404) {
+        history.push('/404');
+      }
     }
-  };
-}
-
-export function advertCreated(advert) {
-  return {
-    type: ADVERT_CREATED_SUCCESS,
-    payload: advert
   };
 }
 
 export function createAdvert(advert) {
   return async function (dispatch, getState, { api, history }) {
-    // dispatch createAdvertRequest
+    dispatch({ type: ADVERT_CREATED_REQUEST });
     try {
-      const newAdvert = await api.adverts.createAdvert(advert);
-      // this call is neede because the created advert is incomplete (sparrest)
-      const createdAdvert = await api.adverts.getAdvert(newAdvert.id);
-      dispatch(advertCreated(createdAdvert));
-      history.push(`/adverts/${createdAdvert.id}`);
+      const newAdvert = await api.createAdvertisement(advert);
+      const createdTweet = await api.getAdvertisementId(newAdvert.id);
+      console.log(createdTweet);
+      dispatch({
+        type: ADVERT_CREATED_SUCCESS,
+        payload: createdTweet
+      });
+      history.push(`/adverts/${createdTweet.id}`);
+      //TODO: redirect to new advert not found
     } catch (error) {
-      // dispatch(createAdvertFailure(error));
-      // if (error.status === 401) {
-      //   history.push('/login');
-      // }
+      dispatch({ type: ADVERT_CREATED_FAIL, error: true, payload: error });
+      if (error.status === 401) {
+        history.push('/login');
+      }
     }
   };
 }
 
-export function authLoginRequest() {
-  return {
-    type: USER_AUTH_LOGIN_REQUEST
-  };
-}
-
-export function authLoginSuccess() {
-  return {
-    type: USER_AUTH_LOGIN_SUCCESS
-  };
-}
-
-export function authLoginFailure(error) {
-  return {
-    type: USER_AUTH_LOGIN_FAIL,
-    error: true,
-    payload: error
+export function deleteAdvert(advertId) {
+  return async function (dispatch, getState, { api, history }) {
+    dispatch({ type: ADVERT_DELETED_REQUEST });
+    try {
+      const advert = await api.deleteAdvertisementId(advertId);
+      dispatch({
+        type: ADVERT_DELETED_SUCCESS,
+        payload: advert
+      });
+    } catch (error) {
+      dispatch({ type: ADVERT_DELETED_FAIL, error: true, payload: error });
+    }
   };
 }
 
 export function authLogin(credentials) {
   // This function will be a redux action
   return async function (dispatch, getState, { api, history }) {
-    dispatch(authLoginRequest());
+    dispatch({ type: USER_AUTH_LOGIN_REQUEST });
     try {
-      await api.auth.login(credentials);
-      dispatch(authLoginSuccess());
+      const token = await api.login(credentials);
+      dispatch({
+        type: USER_AUTH_LOGIN_SUCCESS,
+        payload: token
+      });
       const { from } = history.location.state || { from: { pathname: '/' } };
       history.replace(from);
     } catch (error) {
-      dispatch(authLoginFailure(error));
+      dispatch({ type: USER_AUTH_LOGIN_FAIL, error: true, payload: error });
     }
   };
 }

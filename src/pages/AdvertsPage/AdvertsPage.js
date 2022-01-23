@@ -22,7 +22,6 @@ function AdvertsPage({ ...props }) {
   //=======================================================================
   const dispatch = useDispatch();
   const advertisements = useSelector(getAdverts);
-  console.log('AdvertsPage', advertisements);
 
   useEffect(() => {
     dispatch(loadAdverts());

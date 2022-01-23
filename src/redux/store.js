@@ -4,10 +4,19 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import * as reducers from './reducers';
 import thunk from 'redux-thunk';
 
-import * as auth from '../pages/LoginPage/LoginService';
-import * as adverts from '../pages/AdvertsPage/AdvertsService';
+import { login, logout } from '../pages/LoginPage/LoginService';
+import { getAdvertisements } from '../pages/AdvertsPage/AdvertsService';
+import { getAdvertisementId, deleteAdvertisementId } from '../pages/AdvertPage/AdvertService';
+import { createAdvertisement } from '../pages/NewAdvertPage/NewAdvertService';
 
-const api = { auth, adverts };
+const api = {
+  login,
+  logout,
+  getAdvertisements,
+  getAdvertisementId,
+  deleteAdvertisementId,
+  createAdvertisement
+};
 
 function logger(store) {
   return function (next) {

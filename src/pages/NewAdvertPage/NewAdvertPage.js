@@ -11,6 +11,7 @@ import Alert from '../../components/Alert/Alert';
 import { getAllTags } from '../../components/FiltersForm/FiltersService';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { useDispatch, useSelector } from 'react-redux';
+import { createAdvert } from '../../redux/actions';
 
 function NewAdvertPage({ ...props }) {
   const dispatch = useDispatch();
@@ -88,22 +89,9 @@ function NewAdvertPage({ ...props }) {
     }
   };
 
-  //Create and save new advert
-  const [createIdAdvertResponse, setIdAdverResponse] = useState('');
-  const createdAdvert = async (newAdvertFormData) => {
-    try {
-      const createdAdvertResponse = await createAdvertisement(newAdvertFormData);
-      setIdAdverResponse(createdAdvertResponse.id);
-    } catch (error) {
-      setError(error);
-    }
-  };
-
   //Send form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    resetError();
-    setIsLoading(true);
 
     if (!selectTags.length) {
       setError({ message: 'Select one tags' });
@@ -117,14 +105,11 @@ function NewAdvertPage({ ...props }) {
         newAdvertFormData.set('photo', photo);
       }
 
-      createdAdvert(newAdvertFormData);
+      // createdAdvert(newAdvertFormData);
+      dispatch(createAdvert(newAdvertFormData));
     }
     setIsLoading(false);
   };
-  //Redirect;
-  if (createIdAdvertResponse) {
-    return <Redirect to={`/adverts/${createIdAdvertResponse}`} />;
-  }
 
   return (
     <Layout {...props}>

@@ -1,6 +1,6 @@
 import Layout from '../../containers/Layout/Layout';
 import './AdvertPage.scss';
-import { deleteAdvertisementId, getAdvertisementId } from './AdvertService';
+import { deleteAdvertisementId } from './AdvertService';
 import { useState, useEffect } from 'react';
 import { ReactComponent as ArrowIcon } from '../../images/svg/arrow.svg';
 import Button from '../../components/Button/Button';
@@ -11,18 +11,21 @@ import Alert from '../../components/Alert/Alert';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import { AiFillDelete } from 'react-icons/ai';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteAdvert, loadAdvert } from '../../redux/actions';
+import { getAdvert } from '../../redux/selectors';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+
 const { formatDistanceToNow } = require('date-fns');
 
 function AdvertPage({ match, ...props }) {
   //Params
-  const advertisementId = match.params.advertId;
-  const history = useHistory();
+  // const advertisementId = match.params.advertId;
+  const { advertId } = useParams();
 
-  //Data
-  const [advertisement, setAdvertisement] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   //Modal control
   const [modalConfirm, setConfirm] = useState(false);
@@ -30,24 +33,23 @@ function AdvertPage({ match, ...props }) {
     setConfirm(modalConfirm ? false : true);
   };
 
-  //Reset error
-  const resetError = () => {
-    setError(null);
-  };
-
   useEffect(() => {
-    resetError();
-    getAdvertisementId(advertisementId).then((advertisement) => setAdvertisement(advertisement));
-    setIsLoading(false);
-  }, [advertisementId]);
+    dispatch(loadAdvert(advertId));
+  }, [dispatch, advertId]);
+
+  //Data
+  const advertisement = useSelector(getAdvert);
+  console.log(advertisement);
 
   const handleDelete = () => {
-    deleteAdvertisementId(advertisementId);
+    deleteAdvertisementId(advertId);
+    // dispatch(deleteAdvert(advertisementId));
     history.push('/');
   };
 
   return (
     <Layout {...props}>
+      <p>{advertisement}</p>
       <section id="advert-page">
         <div className="container">
           {advertisement ? (
@@ -101,14 +103,14 @@ function AdvertPage({ match, ...props }) {
               </div>
             </div>
           ) : (
-            !isLoading && <NoResultsFound />
+            <NoResultsFound />
           )}
-          {isLoading && <SpinnerLoading />}
+          {/* {isLoading && <SpinnerLoading />}
           {error && (
             <Alert onClick={resetError} className="loginPage-error">
               {error.message}
             </Alert>
-          )}
+          )} */}
         </div>
       </section>
 
