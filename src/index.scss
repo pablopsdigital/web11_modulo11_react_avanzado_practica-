@@ -1,0 +1,110 @@
+/*================================== Reset Browsers ==================================*/
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f0f0f8;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 1640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/*
+ * Text
+ */
+
+h1 {
+  font-weight: 600;
+}
+
+/*
+ * Link, a
+ */
+a {
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+ul {
+  list-style: none;
+}
+
+/*
+ * Buttons
+ */
+
+button {
+  cursor: pointer;
+  padding: 0.75rem 2rem;
+  margin: 1rem;
+  color: #ff443c;
+  background-color: transparent;
+  border: 2px solid #ff443c;
+  border-radius: 100rem;
+  font-size: 1.05rem;
+  &:hover {
+    background-color: #ff1a52;
+    color: white;
+    border: 2px solid #ff1a52;
+  }
+}
+
+/*
+ * Form and inputs
+ */
+input[type='text'],
+input[type='email'],
+input[type='number'],
+input[type='password'],
+input[type='*'] {
+  padding: 0.5rem 1rem;
+  border: 1px solid #cbcfd1;
+  background-color: white;
+  border-radius: 0.25rem;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+input[type='checkbox'],
+input[type='radio'] {
+  margin: 0.5rem 0.5rem;
+}
+
+input:-internal-autofill-selected {
+  background-color: white;
+}
+
+input:focus {
+  // box-shadow: 0 0 5pt 2pt #ff1a52;
+}

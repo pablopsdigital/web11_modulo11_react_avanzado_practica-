@@ -1,0 +1,40 @@
+#filters {
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #f0f0f8;
+  margin: 2rem 0;
+  border-radius: 0.5rem;
+  h3 {
+    font-weight: 700;
+  }
+
+  .inputs-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .slider-range {
+      width: 250px;
+    }
+  }
+
+  .filters-buttons {
+    button {
+      padding: 0.5rem 2rem;
+      font-size: 0.9rem;
+      margin: 0.25rem;
+    }
+  }
+
+  .rc-slider-handle {
+    border: 2px solid #ff443c;
+  }
+  .rc-slider-rail {
+    background-color: #ffcecd;
+  }
+
+  .rc-slider-track {
+    background-color: #ff443c;
+  }
+}

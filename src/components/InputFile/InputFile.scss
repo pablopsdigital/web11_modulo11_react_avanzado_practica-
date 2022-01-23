@@ -1,0 +1,42 @@
+.container-input-file {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 300px;
+  width: 100%;
+  margin: 30px 0;
+  border-radius: 10px;
+  border: 2px solid rgb(218, 218, 218);
+}
+.input-file-head {
+  text-align: center;
+  font-weight: bold;
+}
+.img-holder {
+  margin: auto;
+  width: 200px;
+  height: 150px;
+  border-radius: 5px;
+  text-align: center;
+}
+.img {
+  height: 100%;
+  object-fit: cover;
+}
+#input-file {
+  display: none;
+}
+.input-field-label {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.image-upload {
+  padding: 10px 20px;
+  color: white;
+  border-radius: 10px;
+  background-color: rgb(190, 190, 190);
+  text-align: center;
+  cursor: pointer;
+}

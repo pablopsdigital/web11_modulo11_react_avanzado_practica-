@@ -1,0 +1,19 @@
+.alert {
+  background-color: rgba(255, 0, 0, 0.192);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  border-radius: 5px;
+  padding: 0.5rem 2rem;
+  margin: 1rem;
+
+  .close {
+    cursor: pointer;
+    .icon {
+      font-size: 2rem;
+      color: #ff443c;
+      margin: 0 0.5rem;
+    }
+  }
+}

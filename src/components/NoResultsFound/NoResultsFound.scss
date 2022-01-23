@@ -1,0 +1,19 @@
+#noresultsfound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px;
+  min-height: 400px;
+
+  .contect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .emoji {
+    font-size: 100px;
+  }
+}

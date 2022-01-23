@@ -1,0 +1,55 @@
+/*================================== Buttons ==================================*/
+.button {
+  text-decoration: none;
+  margin: 0;
+  padding: 0 2em;
+  height: 50px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 50px;
+  min-width: 150px;
+  border: 1px solid #ff5a30;
+  cursor: pointer;
+}
+
+.login-button {
+  text-decoration: none;
+  padding: 0 2em;
+  height: 50px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 50px;
+  min-width: 150px;
+  border: 1px solid #ff5a30;
+  cursor: pointer;
+  color: #ff5a30;
+  background-color: white;
+}
+
+.close-session-button {
+  text-decoration: none;
+  padding: 0 2em;
+  height: 50px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border-radius: 50px;
+  min-width: 150px;
+  border: 1px solid #ff5a30;
+  cursor: pointer;
+  color: #ff5a30;
+  background-color: white;
+}
+
+.close-session-button:hover,
+.load-product-button:hover,
+.login-button:hover {
+  color: white;
+  background-color: #ff1a52;
+  border: 1px solid #ff1a52;
+}
+
+.load-product-button {
+  color: white;
+  border: 1px solid #ff5a30;
+  background-color: #ff5a30;
+}
