@@ -8,6 +8,9 @@ import PropTypes from 'prop-types';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import FiltersForm from '../../components/FiltersForm/FiltersForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadAdverts } from '../../redux/actions';
+import { getAdverts } from '../../redux/selectors';
 
 //Protypes
 AdvertsPage.propTypes = {
@@ -17,23 +20,13 @@ AdvertsPage.propTypes = {
 function AdvertsPage({ ...props }) {
   //Data
   //=======================================================================
-  const [advertisements, setAdvertisements] = useState([]);
-  const [advertisementsFilterList, setAdvertisementsFilterList] = useState([]);
-  const [filtersInfo, setFiltersInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const resetError = () => {
-    setError(null);
-  };
+  const dispatch = useDispatch();
+  const advertisements = useSelector(getAdverts);
+  console.log('AdvertsPage', advertisements);
 
   useEffect(() => {
-    resetError();
-    getAdvertisements().then((advertisements) => setAdvertisements(advertisements));
-    setIsLoading(false);
-  }, []);
-
-  const advertsFilter = () => {};
+    dispatch(loadAdverts());
+  }, [dispatch]);
 
   //Filters
   //======================================================================
@@ -43,10 +36,10 @@ function AdvertsPage({ ...props }) {
   return (
     <Layout {...props}>
       {/* <p>Filters Info: {JSON.stringify(filtersInfo)}</p> */}
-      <FiltersForm advertisements={advertisements} setFiltersInfo={setFiltersInfo} />
+      {/* <FiltersForm advertisements={advertisements} setFiltersInfo={setFiltersInfo} /> */}
       <section id="adverts-page">
         <div className="container">
-          {isLoading || advertisements.length ? (
+          {advertisements.length ? (
             <>
               <div className="header">
                 <h2>The latest publications</h2>
@@ -59,13 +52,7 @@ function AdvertsPage({ ...props }) {
               </ul>
             </>
           ) : (
-            !isLoading && <NoResultsFound />
-          )}
-          {isLoading && <SpinnerLoading />}
-          {error && (
-            <Alert onClick={resetError} className="loginPage-error">
-              {error.message}
-            </Alert>
+            <NoResultsFound />
           )}
         </div>
       </section>
