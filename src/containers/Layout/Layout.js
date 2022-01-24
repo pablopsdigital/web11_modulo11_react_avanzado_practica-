@@ -6,8 +6,8 @@ function Layout({ children, ...props }) {
     <div>
       <Navbar {...props} />
       <div className="container">
-        <main className="layout-main bordered">
-          <section className="layout-content">{children}</section>
+        <main>
+          <section>{children}</section>
         </main>
       </div>
 

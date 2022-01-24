@@ -1,3 +1,4 @@
+import CustomLocalStorageManager from '../utils/CustomLocalStorageManager';
 import {
   UI_RESET_ERROR,
   ADVERTS_LOADED_SUCCESS,
@@ -15,7 +16,12 @@ import {
   ADVERT_CREATED_REQUEST,
   ADVERT_DELETED_REQUEST,
   ADVERT_DELETED_SUCCESS,
-  ADVERT_DELETED_FAIL
+  ADVERT_DELETED_FAIL,
+  ADVERT_LOADED_TAGS_REQUEST,
+  ADVERT_LOADED_TAGS_SUCCESS,
+  ADVERT_LOADED_TAGS_FAIL,
+  ADVERTS_SET_FILTERS,
+  ADVERTS_DELETE_FILTERS
 } from './constants';
 
 import { areAdvertsLoaded, getAdverts } from './selectors';
@@ -27,7 +33,7 @@ export function uiResetError() {
 }
 
 export function loadAdverts() {
-  return async function (dispatch, getState, { api }) {
+  return async function (dispatch, getState, { api, history }) {
     if (areAdvertsLoaded(getState())) {
       return;
     }
@@ -40,6 +46,9 @@ export function loadAdverts() {
       });
     } catch (error) {
       dispatch({ type: ADVERTS_LOADED_FAIL, error: true, payload: error });
+      if (error.status === 404) {
+        history.push('/404');
+      }
     }
   };
 }
@@ -66,13 +75,27 @@ export function loadAdvert(advertId) {
   };
 }
 
+export function loadTags() {
+  return async function (dispatch, getState, { api }) {
+    dispatch({ type: ADVERT_LOADED_TAGS_REQUEST });
+    try {
+      const tags = await api.getAllTags();
+      dispatch({
+        type: ADVERT_LOADED_TAGS_SUCCESS,
+        payload: tags
+      });
+    } catch (error) {
+      dispatch({ type: ADVERT_LOADED_TAGS_FAIL, error: true, payload: error });
+    }
+  };
+}
+
 export function createAdvert(advert) {
   return async function (dispatch, getState, { api, history }) {
     dispatch({ type: ADVERT_CREATED_REQUEST });
     try {
       const newAdvert = await api.createAdvertisement(advert);
       const createdTweet = await api.getAdvertisementId(newAdvert.id);
-      console.log(createdTweet);
       dispatch({
         type: ADVERT_CREATED_SUCCESS,
         payload: createdTweet
@@ -92,11 +115,11 @@ export function deleteAdvert(advertId) {
   return async function (dispatch, getState, { api, history }) {
     dispatch({ type: ADVERT_DELETED_REQUEST });
     try {
-      const advert = await api.deleteAdvertisementId(advertId);
+      await api.deleteAdvertisementId(advertId);
       dispatch({
-        type: ADVERT_DELETED_SUCCESS,
-        payload: advert
+        type: ADVERT_DELETED_SUCCESS
       });
+      loadAdverts(); //TODO: Cuestion if use function is correct
       history.push('/');
     } catch (error) {
       dispatch({ type: ADVERT_DELETED_FAIL, error: true, payload: error });
@@ -104,18 +127,35 @@ export function deleteAdvert(advertId) {
   };
 }
 
+export function createFilters(filters) {
+  return async function (dispatch, getState, { api, history }) {
+    CustomLocalStorageManager.setItem('filters', filters);
+    dispatch({
+      type: ADVERTS_SET_FILTERS,
+      payload: filters
+    });
+  };
+}
+
+export function deleteFilters(filters) {
+  return async function (dispatch, getState, { api, history }) {
+    CustomLocalStorageManager.removeItem('filters');
+    dispatch({
+      type: ADVERTS_DELETE_FILTERS,
+      payload: {}
+    });
+  };
+}
+
 export function authLogin(credentials) {
-  // This function will be a redux action
   return async function (dispatch, getState, { api, history }) {
     dispatch({ type: USER_AUTH_LOGIN_REQUEST });
     try {
-      const token = await api.login(credentials);
+      await api.login(credentials);
       dispatch({
-        type: USER_AUTH_LOGIN_SUCCESS,
-        payload: token
+        type: USER_AUTH_LOGIN_SUCCESS
       });
-      const { from } = history.location.state || { from: { pathname: '/' } };
-      history.replace(from);
+      history.push('/adverts');
     } catch (error) {
       dispatch({ type: USER_AUTH_LOGIN_FAIL, error: true, payload: error });
     }
@@ -123,7 +163,15 @@ export function authLogin(credentials) {
 }
 
 export function authLogout() {
+  return async function (dispatch, getState, { api, history }) {
+    await api.logout();
+    dispatch({ type: USER_AUTH_LOGOUT, payload: false });
+    history.push('/login');
+  };
+}
+
+export function resetError() {
   return {
-    type: USER_AUTH_LOGOUT
+    type: UI_RESET_ERROR
   };
 }

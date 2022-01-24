@@ -1,6 +1,5 @@
 import Layout from '../../containers/Layout/Layout';
 import './AdvertPage.scss';
-import { deleteAdvertisementId } from './AdvertService';
 import { useState, useEffect } from 'react';
 import { ReactComponent as ArrowIcon } from '../../images/svg/arrow.svg';
 import Button from '../../components/Button/Button';
@@ -11,19 +10,16 @@ import Alert from '../../components/Alert/Alert';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import { AiFillDelete } from 'react-icons/ai';
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAdvert, loadAdvert } from '../../redux/actions';
-import { getAdvert, getAdverts } from '../../redux/selectors';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { getAdvert, getUi } from '../../redux/selectors';
+import { useParams } from 'react-router-dom';
 
 const { formatDistanceToNow } = require('date-fns');
 
 function AdvertPage({ match, ...props }) {
   //Params
-  const advertId = match.params.advertId;
-  const history = useHistory();
-  // const { advertId } = useParams();
+  const { advertId } = useParams();
 
   //Modal control
   const [modalConfirm, setConfirm] = useState(false);
@@ -33,16 +29,16 @@ function AdvertPage({ match, ...props }) {
 
   //Load data
   const dispatch = useDispatch();
+  const { isLoading, error } = useSelector(getUi);
+
   useEffect(() => {
     dispatch(loadAdvert(advertId));
   }, [dispatch, advertId]);
 
   const advertisement = useSelector((state) => getAdvert(state, advertId));
 
-  const handleDelete = () => {
+  const handleDelete = (event) => {
     dispatch(deleteAdvert(advertId));
-    setConfirm(false);
-    history.push('/');
   };
 
   return (
@@ -102,12 +98,8 @@ function AdvertPage({ match, ...props }) {
           ) : (
             <NoResultsFound />
           )}
-          {/* {isLoading && <SpinnerLoading />}
-          {error && (
-            <Alert onClick={resetError} className="loginPage-error">
-              {error.message}
-            </Alert>
-          )} */}
+          {isLoading && <SpinnerLoading />}
+          {error && <Alert className="loginPage-error">{error.message}</Alert>}
         </div>
       </section>
 

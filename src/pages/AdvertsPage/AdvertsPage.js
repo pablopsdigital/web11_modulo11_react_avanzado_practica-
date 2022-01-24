@@ -1,31 +1,25 @@
 import AdvertisementCard from '../../components/AdvertisementCard/AdvertisementCard';
 import Layout from '../../containers/Layout/Layout';
 import './AdvertsPage.scss';
-import { useState, useEffect } from 'react';
-import { getAdvertisements } from './AdvertsService';
+import { useEffect } from 'react';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
-import PropTypes from 'prop-types';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import FiltersForm from '../../components/FiltersForm/FiltersForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadAdverts } from '../../redux/actions';
-import { getAdverts } from '../../redux/selectors';
-
-//Protypes
-AdvertsPage.propTypes = {
-  history: PropTypes.object.isRequired
-};
+import { loadAdverts, resetError } from '../../redux/actions';
+import { getAdverts, getUi } from '../../redux/selectors';
 
 function AdvertsPage({ ...props }) {
   //Data
   //=======================================================================
   const dispatch = useDispatch();
   const advertisements = useSelector(getAdverts);
+  const { isLoading, error } = useSelector(getUi);
 
   useEffect(() => {
     dispatch(loadAdverts());
-  }, [dispatch]);
+  }, [dispatch, advertisements]);
 
   //Filters
   //======================================================================
@@ -34,8 +28,7 @@ function AdvertsPage({ ...props }) {
   //=======================================================================
   return (
     <Layout {...props}>
-      {/* <p>Filters Info: {JSON.stringify(filtersInfo)}</p> */}
-      {/* <FiltersForm advertisements={advertisements} setFiltersInfo={setFiltersInfo} /> */}
+      <FiltersForm />
       <section id="adverts-page">
         <div className="container">
           {advertisements.length ? (
@@ -51,10 +44,16 @@ function AdvertsPage({ ...props }) {
               </ul>
             </>
           ) : (
-            <NoResultsFound />
+            !isLoading && <NoResultsFound />
           )}
         </div>
       </section>
+      {isLoading && <SpinnerLoading />}
+      {error && (
+        <Alert onClick={dispatch(resetError())} className="loginPage-error">
+          {error.message}
+        </Alert>
+      )}
     </Layout>
   );
 }

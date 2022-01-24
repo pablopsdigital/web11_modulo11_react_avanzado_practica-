@@ -5,7 +5,7 @@ import * as reducers from './reducers';
 import thunk from 'redux-thunk';
 
 import { login, logout } from '../pages/LoginPage/LoginService';
-import { getAdvertisements } from '../pages/AdvertsPage/AdvertsService';
+import { getAdvertisements, getAllTags } from '../pages/AdvertsPage/AdvertsService';
 import { getAdvertisementId, deleteAdvertisementId } from '../pages/AdvertPage/AdvertService';
 import { createAdvertisement } from '../pages/NewAdvertPage/NewAdvertService';
 
@@ -15,7 +15,8 @@ const api = {
   getAdvertisements,
   getAdvertisementId,
   deleteAdvertisementId,
-  createAdvertisement
+  createAdvertisement,
+  getAllTags
 };
 
 function logger(store) {

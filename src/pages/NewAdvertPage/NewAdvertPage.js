@@ -4,31 +4,16 @@ import Button from '../../components/Button/Button';
 import './NewAdvertPage.scss';
 import InputFile from '../../components/InputFile/InputFile';
 import imageNoPhoto from '../../images/no-image.png';
-import { createAdvertisement } from './NewAdvertService';
-import { Redirect } from 'react-router-dom';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
-import { getAllTags } from '../../components/FiltersForm/FiltersService';
-import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAdvert } from '../../redux/actions';
+import { createAdvert, loadTags } from '../../redux/actions';
+import { getAdvertsTags, getUi } from '../../redux/selectors';
 
 function NewAdvertPage({ ...props }) {
   const dispatch = useDispatch();
-  const history = useHistory();
-
-  //Data
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const resetError = () => {
-    setError(null);
-  };
-
-  useEffect(() => {
-    resetError();
-    setIsLoading(false);
-  }, []);
+  const { isLoading, error } = useSelector(getUi);
 
   //Name
   const [name, setName] = useState('');
@@ -50,14 +35,12 @@ function NewAdvertPage({ ...props }) {
   };
 
   //Tags
+  const tags = useSelector(getAdvertsTags) || [];
   const [selectTags, setSelectTags] = useState([]);
-  const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    setIsLoading(true);
-    getAllTags().then((tags) => setTags(tags));
-    setIsLoading(false);
-  }, []);
+    dispatch(loadTags());
+  }, [dispatch]);
 
   const handleCheckTag = (event) => {
     var listTags = [...selectTags];
@@ -95,7 +78,7 @@ function NewAdvertPage({ ...props }) {
     event.preventDefault();
 
     if (!selectTags.length) {
-      setError({ message: 'Select one tags' });
+      alert('Select one tags');
     } else {
       const newAdvertFormData = new FormData();
       newAdvertFormData.set('name', name);
@@ -105,11 +88,8 @@ function NewAdvertPage({ ...props }) {
       if (photo) {
         newAdvertFormData.set('photo', photo);
       }
-
-      // createdAdvert(newAdvertFormData);
       dispatch(createAdvert(newAdvertFormData));
     }
-    setIsLoading(false);
   };
 
   return (
@@ -216,7 +196,7 @@ function NewAdvertPage({ ...props }) {
             </form>
 
             {isLoading && <SpinnerLoading />}
-            {error && <Alert onClick={resetError}>{error.message}</Alert>}
+            {error && <Alert>{error.message}</Alert>}
           </div>
         </div>
       </div>

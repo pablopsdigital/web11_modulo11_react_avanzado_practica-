@@ -1,12 +1,17 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Button from '../Button/Button';
 import './FiltersForm.scss';
 import { Range } from 'rc-slider';
-import { getAllTags } from './FiltersService';
 import 'rc-slider/assets/index.css';
 import CustomLocalStorageManager from '../../utils/CustomLocalStorageManager';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAdverts, getAdvertsTags } from '../../redux/selectors';
+import { createFilters, deleteFilters, loadTags } from '../../redux/actions';
 
-export default function Filters({ advertisements, setFiltersInfo }) {
+export default function Filters() {
+  const dispatch = useDispatch();
+  const advertisements = useSelector(getAdverts);
+
   //Calculate minPrice maxPrice price
   const [minPrice, setMinPrice] = useState(
     advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price
@@ -15,7 +20,7 @@ export default function Filters({ advertisements, setFiltersInfo }) {
     advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price
   );
 
-  useEffect(() => {
+  useMemo(() => {
     setMinPrice(advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price);
     setMaxPrice(advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price);
   }, [advertisements]);
@@ -36,7 +41,6 @@ export default function Filters({ advertisements, setFiltersInfo }) {
       const readFilters = CustomLocalStorageManager.getItem('filters');
 
       setFilters(readFilters);
-      setFiltersInfo(readFilters);
 
       setFilterName(readFilters.name);
       setFilterSale(readFilters.sale);
@@ -58,21 +62,18 @@ export default function Filters({ advertisements, setFiltersInfo }) {
   };
 
   //Price filter
-  const refSlider = createRef();
-
   const [filterPriceRange, setFilterPriceRange] = useState(filters.price);
   const handleFilterPriceRange = (value) => {
     setFilterPriceRange(value);
   };
 
   //Tags filter
+  const tags = useSelector(getAdvertsTags);
   const [selectTags, setSelectTags] = useState(filters.tags);
-  const [tags, setTags] = useState([]);
+
   useEffect(() => {
-    // resetError();
-    getAllTags().then((tags) => setTags(tags));
-    // setIsLoading(false);
-  }, []);
+    dispatch(loadTags());
+  }, [dispatch]);
 
   const handleCheckTag = (event) => {
     var listSelectTags = [...selectTags];
@@ -82,7 +83,6 @@ export default function Filters({ advertisements, setFiltersInfo }) {
       listSelectTags.splice(selectTags.indexOf(event.target.value), 1);
     }
     setSelectTags(listSelectTags);
-    console.log('selectTags', listSelectTags);
   };
 
   //Data filters select by user
@@ -96,25 +96,18 @@ export default function Filters({ advertisements, setFiltersInfo }) {
   //Set data filters in state and localStorage
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    setFilters(selectFiltersInfo);
-    CustomLocalStorageManager.setItem('filters', selectFiltersInfo);
-    setFiltersInfo(selectFiltersInfo);
+    dispatch(createFilters(selectFiltersInfo));
   };
 
   //Reset filters state and localStorage
   const resetFilters = (event) => {
     event.preventDefault();
-
-    setFilters(filtersInitialState);
+    dispatch(deleteFilters());
 
     setFilterName(filtersInitialState.name);
     setFilterSale(filtersInitialState.sale);
     setFilterPriceRange(filtersInitialState.price);
     setSelectTags(filtersInitialState.tags);
-
-    CustomLocalStorageManager.setItem('filters', filtersInitialState);
-    setFiltersInfo(filtersInitialState);
-    // CustomLocalStorageManager.removeItem('filters');
   };
 
   return (
@@ -179,12 +172,11 @@ export default function Filters({ advertisements, setFiltersInfo }) {
                 <label>Range: {`${filterPriceRange[0]} - ${filterPriceRange[1]}`}</label>
                 <div className="slider-range">
                   <Range
-                    ref={refSlider}
                     marks={{
                       [minPrice]: minPrice,
                       [maxPrice]: maxPrice
                     }}
-                    min={minPrice}
+                    min={0}
                     max={maxPrice}
                     value={filterPriceRange}
                     onChange={handleFilterPriceRange}

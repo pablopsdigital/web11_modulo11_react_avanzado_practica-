@@ -1,19 +1,26 @@
 import './Navbar.scss';
 import Button from '../Button/Button';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as Brand } from '../../images/svg/brand.svg';
 import { Link, NavLink } from 'react-router-dom';
-import AuthContext from '../../contexts/AuthContext';
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsLogged } from '../../redux/selectors';
+import { authLogout } from '../../redux/actions';
 
 function Navbar({ search, ...props }) {
-  //Import AuthContext properties
-  const { userIsLoggedState, handleLogout } = useContext(AuthContext);
+  const auth = useSelector(getIsLogged);
 
   //Modal control
   const [modalConfirm, setConfirm] = useState(false);
   const handleConfirm = () => {
     setConfirm(modalConfirm ? false : true);
+  };
+
+  //Control logout
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(authLogout());
   };
 
   return (
@@ -33,7 +40,7 @@ function Navbar({ search, ...props }) {
             <NavLink exact to="/adverts/new" activeClassName="link-active">
               New Advert
             </NavLink>
-            {userIsLoggedState ? (
+            {auth ? (
               <>
                 <Button onClick={handleConfirm}>Log out</Button>
               </>

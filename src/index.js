@@ -6,11 +6,11 @@ import './index.scss';
 import { setAuthorizationHeader } from './services/ApiClient';
 import configureStore from './redux/store';
 import { createBrowserHistory } from 'history';
-import { Provider } from 'react-redux';
-import { ConnectedRouter as Router } from 'connected-react-router';
+import RootCustomProvider from './components/RootCustomProvider/RootCustomProvider';
 
 //Read data localStorage
 let accessToken = null;
+
 if (CustomLocalStorageManager.getItem('token')) {
   accessToken = CustomLocalStorageManager.getItem('token');
   //Config Header axios client
@@ -22,11 +22,9 @@ const store = configureStore({ auth: !!accessToken }, { history });
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </Provider>
+    <RootCustomProvider store={store} history={history}>
+      <App />
+    </RootCustomProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
