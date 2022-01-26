@@ -14,7 +14,7 @@ import {
   ADVERTS_DELETE_FILTERS
 } from './constants';
 
-const defaultState = {
+export const defaultState = {
   auth: false,
   adverts: {
     loaded: false,
@@ -31,7 +31,7 @@ const defaultState = {
 export function auth(authState = defaultState.auth, action) {
   switch (action.type) {
     case USER_AUTH_LOGIN_REQUEST:
-      return {};
+      return authState;
     case USER_AUTH_LOGIN_SUCCESS:
       return true;
     case USER_AUTH_LOGOUT:

@@ -7,7 +7,7 @@ import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import FiltersForm from '../../components/FiltersForm/FiltersForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadAdverts, resetError } from '../../redux/actions';
+import { loadAdverts, uiResetError } from '../../redux/actions';
 import { getAdverts, getUi } from '../../redux/selectors';
 
 function AdvertsPage({ ...props }) {
@@ -50,7 +50,7 @@ function AdvertsPage({ ...props }) {
       </section>
       {isLoading && <SpinnerLoading />}
       {error && (
-        <Alert onClick={dispatch(resetError())} className="loginPage-error">
+        <Alert onClick={dispatch(uiResetError())} className="loginPage-error">
           {error.message}
         </Alert>
       )}

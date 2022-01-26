@@ -26,12 +26,6 @@ import {
 
 import { areAdvertsLoaded, getAdverts } from './selectors';
 
-export function uiResetError() {
-  return {
-    type: UI_RESET_ERROR
-  };
-}
-
 export function loadAdverts() {
   return async function (dispatch, getState, { api, history }) {
     if (areAdvertsLoaded(getState())) {
@@ -100,7 +94,7 @@ export function createAdvert(advert) {
         type: ADVERT_CREATED_SUCCESS,
         payload: createdTweet
       });
-      history.push(`/adverts/${createdTweet.id}`);
+      history.replace(`/adverts/${createdTweet.id}`);
       //TODO: redirect to new advert not found
     } catch (error) {
       dispatch({ type: ADVERT_CREATED_FAIL, error: true, payload: error });
@@ -119,7 +113,7 @@ export function deleteAdvert(advertId) {
       dispatch({
         type: ADVERT_DELETED_SUCCESS
       });
-      loadAdverts(); //TODO: Cuestion if use function is correct
+      loadAdverts();
       history.push('/');
     } catch (error) {
       dispatch({ type: ADVERT_DELETED_FAIL, error: true, payload: error });
@@ -128,7 +122,7 @@ export function deleteAdvert(advertId) {
 }
 
 export function createFilters(filters) {
-  return async function (dispatch, getState, { api, history }) {
+  return async function (dispatch) {
     CustomLocalStorageManager.setItem('filters', filters);
     dispatch({
       type: ADVERTS_SET_FILTERS,
@@ -170,7 +164,7 @@ export function authLogout() {
   };
 }
 
-export function resetError() {
+export function uiResetError() {
   return {
     type: UI_RESET_ERROR
   };

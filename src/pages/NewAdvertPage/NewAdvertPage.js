@@ -25,7 +25,6 @@ function NewAdvertPage({ ...props }) {
   const [type, setSale] = useState(null);
   const handleInputSale = (event) => {
     setSale(event.target.value);
-    console.log(type);
   };
 
   //Price

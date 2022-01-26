@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 import { useDispatch } from 'react-redux';
-import { resetError } from '../../redux/actions';
+import { uiResetError } from '../../redux/actions';
 
 function Alert({ ...props }) {
   const dispatch = useDispatch();
   const handlerClick = () => {
-    dispatch(resetError());
+    dispatch(uiResetError());
   };
 
   return (

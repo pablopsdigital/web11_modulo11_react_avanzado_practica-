@@ -5,7 +5,7 @@ import { ReactComponent as Brand } from '../../images/svg/brand.svg';
 import Alert from '../../components/Alert/Alert';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import { useDispatch, useSelector } from 'react-redux';
-import { authLogin, resetError } from '../../redux/actions';
+import { authLogin } from '../../redux/actions';
 import { getIsLogged, getUi } from '../../redux/selectors';
 
 function LoginPage({ history, ...props }) {
