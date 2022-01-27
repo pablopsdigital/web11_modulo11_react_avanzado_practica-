@@ -149,7 +149,8 @@ export function authLogin(credentials) {
       dispatch({
         type: USER_AUTH_LOGIN_SUCCESS
       });
-      history.push('/adverts');
+      const { from } = history.location.state || { from: { pathname: '/' } };
+      history.replace(from);
     } catch (error) {
       dispatch({ type: USER_AUTH_LOGIN_FAIL, error: true, payload: error });
     }
