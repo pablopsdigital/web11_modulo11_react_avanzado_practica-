@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginPage snapshot 1`] = `
+<div>
+  <div
+    id="loginPage"
+  >
+    <div
+      class="brand-container"
+    >
+      <svg
+        alt="brand"
+        class="brand-img"
+      >
+        brand.svg
+      </svg>
+    </div>
+    <div
+      class="content"
+    >
+      <h1>
+        Login
+      </h1>
+      <form>
+        <input
+          name="email"
+          placeholder="Enter email"
+          type="email"
+          value=""
+        />
+        <br />
+        <input
+          name="password"
+          placeholder="Enter password"
+          type="password"
+          value=""
+        />
+        <br />
+        <label>
+          <input
+            name="rememberme"
+            type="checkbox"
+          />
+           
+          Remenber me
+        </label>
+        <br />
+        <button
+          disabled=""
+          type="submit"
+        >
+          Iniciar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;

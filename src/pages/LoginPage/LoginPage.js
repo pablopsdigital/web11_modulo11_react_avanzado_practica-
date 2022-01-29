@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authLogin } from '../../redux/actions';
 import { getIsLogged, getUi } from '../../redux/selectors';
 
-function LoginPage({ history, ...props }) {
+export function LoginPage({ history, ...props }) {
   const auth = useSelector(getIsLogged);
   const { isLoading, error } = useSelector(getUi);
 
   useEffect(() => {
+    //TODO: Substitude redirect action redux, but in this moment no found
     if (auth === true) {
       history.push('/adverts');
     }
