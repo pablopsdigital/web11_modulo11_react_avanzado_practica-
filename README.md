@@ -57,7 +57,7 @@ Para la ejecución de los diferentes test implementados será necesario ejecutar
 
 De forma adicional se puede visualizar la cobertura con el comando:
 
-    npm run test -- --coverage --watchAll
+    npm run coverage
 
 ## Capturas
 
