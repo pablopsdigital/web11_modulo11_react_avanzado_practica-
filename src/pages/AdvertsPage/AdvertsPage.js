@@ -1,14 +1,15 @@
 import AdvertisementCard from '../../components/AdvertisementCard/AdvertisementCard';
 import Layout from '../../containers/Layout/Layout';
 import './AdvertsPage.scss';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import FiltersForm from '../../components/FiltersForm/FiltersForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAdverts, uiResetError } from '../../redux/actions';
-import { getAdverts, getUi } from '../../redux/selectors';
+import { getAdverts, getFilters, getUi } from '../../redux/selectors';
+import { filterAdverts } from './FilterAdvertisements';
 
 function AdvertsPage({ ...props }) {
   //Data
@@ -23,22 +24,24 @@ function AdvertsPage({ ...props }) {
 
   //Filters
   //======================================================================
+  const filtersInfo = useSelector(getFilters);
+  const finalData = filterAdverts(advertisements, filtersInfo);
 
   //Return
   //=======================================================================
   return (
     <Layout {...props}>
-      <FiltersForm />
+      <FiltersForm advertisements={advertisements} />
       <section id="adverts-page">
         <div className="container">
-          {advertisements.length ? (
+          {finalData.length ? (
             <>
               <div className="header">
                 <h2>The latest publications</h2>
-                <p>Total results: {advertisements.length}</p>
+                <p>Total results: {finalData.length}</p>
               </div>
               <ul className="body">
-                {advertisements.map((advertisement) => (
+                {finalData.map((advertisement) => (
                   <AdvertisementCard key={advertisement.id} advertisement={advertisement} />
                 ))}
               </ul>

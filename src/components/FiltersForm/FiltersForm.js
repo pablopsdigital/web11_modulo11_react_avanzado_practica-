@@ -46,6 +46,8 @@ export default function Filters() {
       setFilterSale(readFilters.sale);
       setFilterPriceRange(readFilters.price);
       setSelectTags(readFilters.tags);
+
+      dispatch(createFilters(readFilters));
     }
   }, []);
 
@@ -102,7 +104,7 @@ export default function Filters() {
   //Reset filters state and localStorage
   const resetFilters = (event) => {
     event.preventDefault();
-    dispatch(deleteFilters());
+    dispatch(deleteFilters(filtersInitialState));
 
     setFilterName(filtersInitialState.name);
     setFilterSale(filtersInitialState.sale);
@@ -113,10 +115,6 @@ export default function Filters() {
   return (
     <div id="filters">
       <h3>Filters</h3>
-      {/* <p>FilterName: {filters.name}</p>
-      <p>filterSale: {filters.sale}</p>
-      <p>FilterPriceRange: {filters.price}</p>
-      <p>{JSON.stringify(filters.tags)}</p> */}
 
       <div className="container">
         <div className="filters-line">

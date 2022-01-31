@@ -22,9 +22,9 @@ const api = {
 function logger(store) {
   return function (next) {
     return function (action) {
-      console.log('*****Dispatching Action: ', action);
+      // console.log('*****Dispatching Action: ', action);
       const result = next(action);
-      console.log('*****New State: ', store.getState());
+      // console.log('*****New State: ', store.getState());
       return result;
     };
   };

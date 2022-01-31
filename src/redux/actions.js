@@ -133,10 +133,11 @@ export function createFilters(filters) {
 
 export function deleteFilters(filters) {
   return async function (dispatch, getState, { api, history }) {
-    CustomLocalStorageManager.removeItem('filters');
+    // CustomLocalStorageManager.removeItem('filters');
+    CustomLocalStorageManager.setItem('filters', filters);
     dispatch({
       type: ADVERTS_DELETE_FILTERS,
-      payload: {}
+      payload: filters
     });
   };
 }
