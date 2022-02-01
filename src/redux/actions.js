@@ -94,7 +94,7 @@ export function createAdvert(advert) {
         type: ADVERT_CREATED_SUCCESS,
         payload: createdTweet
       });
-      history.replace(`/adverts/${createdTweet.id}`);
+      history.push(`/adverts/${createdTweet.id}`);
       //TODO: redirect to new advert not found
     } catch (error) {
       dispatch({ type: ADVERT_CREATED_FAIL, error: true, payload: error });
@@ -111,10 +111,10 @@ export function deleteAdvert(advertId) {
     try {
       await api.deleteAdvertisementId(advertId);
       dispatch({
-        type: ADVERT_DELETED_SUCCESS
+        type: ADVERT_DELETED_SUCCESS,
+        payload: advertId
       });
-      loadAdverts();
-      history.push('/');
+      history.push(`/adverts`);
     } catch (error) {
       dispatch({ type: ADVERT_DELETED_FAIL, error: true, payload: error });
     }

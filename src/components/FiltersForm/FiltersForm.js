@@ -29,7 +29,7 @@ export default function Filters() {
   const filtersInitialState = {
     name: '',
     sale: 'all',
-    price: [minPrice, maxPrice],
+    price: minPrice && maxPrice ? [minPrice, maxPrice] : [0, 100],
     tags: []
   };
 
@@ -46,10 +46,9 @@ export default function Filters() {
       setFilterSale(readFilters.sale);
       setFilterPriceRange(readFilters.price);
       setSelectTags(readFilters.tags);
-
       dispatch(createFilters(readFilters));
     }
-  }, []);
+  }, [dispatch]);
 
   //Name filter
   const [filterName, setFilterName] = useState(filters.name);
