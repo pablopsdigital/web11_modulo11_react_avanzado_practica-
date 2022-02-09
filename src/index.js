@@ -21,10 +21,10 @@ const history = createBrowserHistory();
 const store = configureStore({ auth: !!accessToken }, { history });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <RootCustomProvider store={store} history={history}>
+  <RootCustomProvider store={store} history={history}>
+    <React.StrictMode>
       <App />
-    </RootCustomProvider>
-  </React.StrictMode>,
+    </React.StrictMode>
+  </RootCustomProvider>,
   document.getElementById('root')
 );
