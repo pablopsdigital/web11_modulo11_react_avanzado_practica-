@@ -58,6 +58,11 @@ http://localhost:3000/
 
 # Ejecución de test
 
+<a href="https://www.loom.com/share/97b7b177826547739ce80ce2b628d493">
+    <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/97b7b177826547739ce80ce2b628d493-with-play.gif">
+    <p>React Avanzado Redux Testing - Ver Video</p>
+  </a>
+
 Para la ejecución de los diferentes test implementados será necesario ejecutar el comando:
 
     npm run test
