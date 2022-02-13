@@ -1,69 +1,40 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../Button/Button';
 import './FiltersForm.scss';
 import { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import CustomLocalStorageManager from '../../utils/CustomLocalStorageManager';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAdverts, getAdvertsTags } from '../../redux/selectors';
-import { createFilters, deleteFilters, loadTags } from '../../redux/actions';
+import { getAdvertsTags } from '../../redux/selectors';
+import { loadTags } from '../../redux/actions';
 
-export default function Filters() {
-  const dispatch = useDispatch();
-  const advertisements = useSelector(getAdverts);
-
+export default function Filters({ advertisements, setFiltersInfo, filtersInfo }) {
   //Calculate minPrice maxPrice price
-  const [minPrice, setMinPrice] = useState(
-    advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price
-  );
-  const [maxPrice, setMaxPrice] = useState(
-    advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price
-  );
-
-  useMemo(() => {
-    setMinPrice(advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price);
-    setMaxPrice(advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price);
-  }, [advertisements]);
+  const minPrice = advertisements.reduce((a, b) => (a.price < b.price ? a : b), {}).price || 0;
+  const maxPrice = advertisements.reduce((a, b) => (a.price > b.price ? a : b), {}).price || 100;
 
   //Filters config
   const filtersInitialState = {
     name: '',
     sale: 'all',
-    price: minPrice && maxPrice ? [minPrice, maxPrice] : [0, 100],
+    price: [minPrice, maxPrice],
     tags: []
   };
 
-  //Filters
   const [filters, setFilters] = useState(filtersInitialState);
 
-  useEffect(() => {
-    if (CustomLocalStorageManager.getItem('filters')) {
-      const readFilters = CustomLocalStorageManager.getItem('filters');
-
-      setFilters(readFilters);
-
-      setFilterName(readFilters.name);
-      setFilterSale(readFilters.sale);
-      setFilterPriceRange(readFilters.price);
-      setSelectTags(readFilters.tags);
-      dispatch(createFilters(readFilters));
-    }
-  }, [dispatch]);
-
   //Name filter
-  const [filterName, setFilterName] = useState(filters.name);
+  const [filterName, setFilterName] = useState(filtersInitialState.name);
   const handleInputName = (event) => {
     setFilterName(event.target.value);
   };
 
   //Sale filter
-  const [filterSale, setFilterSale] = useState(filters.sale);
+  const [filterSale, setFilterSale] = useState(filtersInitialState.sale);
   const handleInputSale = (event) => {
     setFilterSale(event.target.value);
   };
 
-  //Price filter
-  const [filterPriceRange, setFilterPriceRange] = useState(filters.price);
+  const [filterPriceRange, setFilterPriceRange] = useState(filtersInitialState.price);
   const handleFilterPriceRange = (value) => {
     setFilterPriceRange(value);
   };
@@ -71,7 +42,7 @@ export default function Filters() {
   //Tags filter
   const tags = useSelector(getAdvertsTags);
   const [selectTags, setSelectTags] = useState(filters.tags);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loadTags());
   }, [dispatch]);
@@ -87,34 +58,61 @@ export default function Filters() {
   };
 
   //Data filters select by user
-  const selectFiltersInfo = {
-    name: filterName,
-    sale: filterSale,
-    price: filterPriceRange,
-    tags: selectTags
+  const saveFilters = () => {
+    const selectFiltersInfo = {
+      name: filterName,
+      sale: filterSale,
+      price: filterPriceRange,
+      tags: selectTags
+    };
+    setFiltersInfo(selectFiltersInfo);
+    setFilters(selectFiltersInfo);
+  };
+
+  const resetInfoFilters = () => {
+    setFilters(filtersInitialState);
+    setFilterName(filtersInitialState.name);
+    setFilterSale(filtersInitialState.sale);
+    setFilterPriceRange(filtersInitialState.price);
+    setSelectTags(filtersInitialState.tags);
+    setFiltersInfo(filtersInitialState);
   };
 
   //Set data filters in state and localStorage
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    dispatch(createFilters(selectFiltersInfo));
+    saveFilters();
   };
 
   //Reset filters state and localStorage
   const resetFilters = (event) => {
     event.preventDefault();
-    dispatch(deleteFilters(filtersInitialState));
-
-    setFilterName(filtersInitialState.name);
-    setFilterSale(filtersInitialState.sale);
-    setFilterPriceRange(filtersInitialState.price);
-    setSelectTags(filtersInitialState.tags);
+    resetInfoFilters();
   };
+
+  useEffect(() => {
+    setFilters({
+      name: '',
+      sale: 'all',
+      price: [minPrice, maxPrice],
+      tags: []
+    });
+  }, [minPrice, maxPrice]);
+
+  useEffect(() => {
+    setFiltersInfo(filters); //reset page
+    setFilterName(filters.name);
+    setFilterSale(filters.sale);
+    setFilterPriceRange(filters.price);
+    setSelectTags(filters.tags);
+  }, [filters, setFiltersInfo]);
 
   return (
     <div id="filters">
       <h3>Filters</h3>
-
+      {/* <p>Filters: {JSON.stringify(filters)}</p>
+      <p>filtersInfo: {JSON.stringify(filtersInfo)}</p>
+      <p>PriceRange: {JSON.stringify(filterPriceRange)}</p> */}
       <div className="container">
         <div className="filters-line">
           <form onSubmit={handleFormSubmit}>
@@ -173,7 +171,7 @@ export default function Filters() {
                       [minPrice]: minPrice,
                       [maxPrice]: maxPrice
                     }}
-                    min={0}
+                    min={minPrice}
                     max={maxPrice}
                     value={filterPriceRange}
                     onChange={handleFilterPriceRange}

@@ -1,15 +1,15 @@
 import AdvertisementCard from '../../components/AdvertisementCard/AdvertisementCard';
 import Layout from '../../containers/Layout/Layout';
 import './AdvertsPage.scss';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';
 import FiltersForm from '../../components/FiltersForm/FiltersForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAdverts, uiResetError } from '../../redux/actions';
-import { getAdverts, getFilters, getUi } from '../../redux/selectors';
-import { filterAdverts } from './FilterAdvertisements';
+import { getAdverts, getUi } from '../../redux/selectors';
+import { filterAdverts, filtersInitialState } from './FilterAdvertisements';
 
 function AdvertsPage({ ...props }) {
   //Data
@@ -24,14 +24,18 @@ function AdvertsPage({ ...props }) {
 
   //Filters
   //======================================================================
-  const filtersInfo = useSelector(getFilters);
+  const [filtersInfo, setFiltersInfo] = useState(filtersInitialState);
   const finalData = filterAdverts(advertisements, filtersInfo);
 
   //Return
   //=======================================================================
   return (
     <Layout {...props}>
-      <FiltersForm advertisements={advertisements} />
+      <FiltersForm
+        advertisements={advertisements}
+        setFiltersInfo={setFiltersInfo}
+        filtersInfo={filtersInfo}
+      />
       <section id="adverts-page">
         <div className="container">
           {finalData.length ? (

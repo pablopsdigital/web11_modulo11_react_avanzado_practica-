@@ -31,6 +31,7 @@ function Navbar({ search, ...props }) {
           <div className="brand-container">
             <Link to="/">
               <Brand className="brand-img" alt="brand"></Brand>
+              Redux
             </Link>
           </div>
           <div className="nav-options">

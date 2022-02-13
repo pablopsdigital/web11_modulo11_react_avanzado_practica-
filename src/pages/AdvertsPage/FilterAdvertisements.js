@@ -1,8 +1,8 @@
 //Filters config
-const filtersInitialState = {
+export const filtersInitialState = {
   name: '',
   sale: 'all',
-  price: [0, 100],
+  price: [],
   tags: []
 };
 
@@ -42,15 +42,7 @@ const filterByTags =
   ({ tags }) =>
     !filter.length || filter.every((tag) => tags.includes(tag));
 
-export const filterAdverts = (
-  adverts,
-  {
-    name = filtersInitialState.name,
-    price = filtersInitialState.price,
-    sale = filtersInitialState.sale,
-    tags = filtersInitialState.tags
-  }
-) => {
+export const filterAdverts = (adverts, { name, price, sale, tags }) => {
   return adverts
     .filter(filterByName(name))
     .filter(filterBySale(sale))
