@@ -4,11 +4,12 @@ import { Provider, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 
+import { authLogin } from '../../redux/actions';
+jest.mock('../../redux/actions');
+// console.log('auth', authLogin);
+
 describe('LoginPage', () => {
   const mockStore = {
-    auth: false,
-    isLoading: false,
-    error: null,
     getState: () => ({
       auth: false,
       adverts: {
@@ -25,10 +26,12 @@ describe('LoginPage', () => {
     subscribe: () => {},
     dispatch: () => {}
   };
+
+  //Mock data inputs
   const email = 'username';
   const password = '1234';
+  const rememberme = true;
 
-  const authLogin = jest.fn().mockResolvedValue({ email, password });
   test('snapshot', () => {
     const { container } = render(
       <Provider store={mockStore}>
@@ -49,20 +52,21 @@ describe('LoginPage', () => {
       </Provider>
     );
 
-    // console.log(debug);
+    // console.log('debug', debug);
 
     //Select elements
     const emailInput = getByLabelText(/email/);
     const passwordInput = getByLabelText(/password/);
     const remembermeInput = getByLabelText(/Rememberme/);
     const buttonSubmit = getByRole('button');
+
     //Send event
     fireEvent.change(emailInput, { target: { value: email } });
     fireEvent.change(passwordInput, { target: { value: password } });
-    fireEvent.change(remembermeInput, { target: { value: true } });
-
+    fireEvent.click(remembermeInput);
     fireEvent.click(buttonSubmit);
-    //Check Result
-    expect(authLogin).toHaveBeenCalledWith({ email, password });
+
+    //Check call to action
+    expect(authLogin).toHaveBeenCalledWith({ email, password, rememberme });
   });
 });

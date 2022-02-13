@@ -25,7 +25,11 @@ export function LoginPage({ history, ...props }) {
     rememberme: false
   });
 
-  const handleChange = ({ target: { value, name } }) => {
+  const handleChange = (event) => {
+    const input = event.target;
+    const value = input.type === 'checkbox' ? input.checked : input.value;
+    const name = input.name;
+
     setInputsValue((prevState) => ({
       ...prevState,
       [name]: value

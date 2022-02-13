@@ -1,7 +1,7 @@
 import AdvertisementCard from '../../components/AdvertisementCard/AdvertisementCard';
 import Layout from '../../containers/Layout/Layout';
 import './AdvertsPage.scss';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import NoResultsFound from '../../components/NoResultsFound/NoResultsFound';
 import SpinnerLoading from '../../components/SpinnerLoading/SpinnerLoading';
 import Alert from '../../components/Alert/Alert';

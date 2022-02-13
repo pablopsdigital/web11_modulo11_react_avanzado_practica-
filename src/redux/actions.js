@@ -24,7 +24,7 @@ import {
   ADVERTS_DELETE_FILTERS
 } from './constants';
 
-import { areAdvertsLoaded, getAdverts, getAdvertsTags } from './selectors';
+import { areAdvertsLoaded, getAdverts, getAdvertsTagsIsLoaded } from './selectors';
 
 export function loadAdverts() {
   return async function (dispatch, getState, { api, history }) {
@@ -71,12 +71,13 @@ export function loadAdvert(advertId) {
 
 export function loadTags() {
   return async function (dispatch, getState, { api }) {
+    const existTags = getAdvertsTagsIsLoaded(getState());
+    if (existTags) {
+      return;
+    }
     dispatch({ type: ADVERT_LOADED_TAGS_REQUEST });
     try {
-      var tags = await getState().adverts.tags;
-      if (!tags.length) {
-        tags = await api.getAllTags();
-      }
+      const tags = await api.getAllTags();
       dispatch({
         type: ADVERT_LOADED_TAGS_SUCCESS,
         payload: tags
@@ -98,7 +99,6 @@ export function createAdvert(advert) {
         payload: createdTweet
       });
       history.push(`/adverts/${createdTweet.id}`);
-      //TODO: redirect to new advert not found
     } catch (error) {
       dispatch({ type: ADVERT_CREATED_FAIL, error: true, payload: error });
       if (error.status === 401) {
