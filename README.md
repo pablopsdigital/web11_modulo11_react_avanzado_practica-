@@ -22,6 +22,13 @@ https://gitkc.cloud/pablopsdigital/web11_modulo07_fundamentos_de_react_practica
 Se puede acceder al enunciado completo de la práctica.  
 [Enunciado completo de la práctica](documentation/enunciado.pdf)
 
+# Vídeo funcionamiento
+
+<a href="https://www.loom.com/share/37a8914b2f6446e5bdf104ad0c130d64">
+    <img style="max-width:100%;" src="https://cdn.loom.com/sessions/thumbnails/37a8914b2f6446e5bdf104ad0c130d64-with-play.gif">
+    <p>Ver Video</p>
+  </a>
+
 # Instalación servidor de pruebas
 
 La tarea está basada en el uso del servidor **nodepop-api**. Se pueden seguir las instrucciones de instalación desde el siguiente link: https://github.com/davidjj76/nodepop-api
@@ -59,7 +66,15 @@ De forma adicional se puede visualizar la cobertura con el comando:
 
     npm run coverage
 
-## Capturas
+# Notas
+
+El slider implementado (rc-slider) de los filtros, lanza un warning al comenzar a modificar el rango de precios (`findDOMNode is deprecated in StrictMode`) este es un error definido a nivel interno del componente.
+
+Algunos enlaces al problema: https://github.com/react-component/slider/issues/750
+
+![enter image description here](documentation/images/warning.png)
+
+# Capturas
 
 ![enter image description here](documentation/screencaptures/captura_00.png)
 
