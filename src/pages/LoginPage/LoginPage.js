@@ -13,7 +13,6 @@ export function LoginPage({ history, ...props }) {
   const { isLoading, error } = useSelector(getUi);
 
   useEffect(() => {
-    //TODO: Substitude redirect action redux, but in this moment no found
     if (auth === true) {
       history.push('/adverts');
     }
@@ -26,11 +25,7 @@ export function LoginPage({ history, ...props }) {
     rememberme: false
   });
 
-  const handleChange = (event) => {
-    const input = event.target;
-    const value = input.type === 'checkbox' ? input.checked : input.value;
-    const name = input.name;
-
+  const handleChange = ({ target: { value, name } }) => {
     setInputsValue((prevState) => ({
       ...prevState,
       [name]: value
@@ -51,30 +46,36 @@ export function LoginPage({ history, ...props }) {
       <div className="content">
         <h1>Login</h1>
         <form onSubmit={handleFormSubmit}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={inputsValuesState.email}
-            onChange={handleChange}
-          />
-          <br />
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            value={inputsValuesState.password}
-            onChange={handleChange}
-          />
+          <label>
+            email
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              value={inputsValuesState.email}
+              onChange={handleChange}
+            />
+          </label>
           <br />
           <label>
+            password
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={inputsValuesState.password}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Rememberme
             <input
               type="checkbox"
               name="rememberme"
               checked={inputsValuesState.rememberme}
               onChange={handleChange}
-            />{' '}
-            Remenber me
+            />
           </label>
           <br />
           <Button

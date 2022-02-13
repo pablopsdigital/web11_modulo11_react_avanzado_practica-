@@ -1,21 +1,14 @@
 import { fireEvent, render } from '@testing-library/react';
 import { LoginPage } from './LoginPage';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useSelector: jest.fn(),
-  useDispatch: jest.fn(),
-  useState: jest.fn()
-}));
-
-const isLoading = jest.fn();
-const error = jest.fn();
-
 describe('LoginPage', () => {
   const mockStore = {
+    auth: false,
+    isLoading: false,
+    error: null,
     getState: () => ({
       auth: false,
       adverts: {
@@ -32,12 +25,18 @@ describe('LoginPage', () => {
     subscribe: () => {},
     dispatch: () => {}
   };
-  // const authLogin = jest.fn().mockResolvedValue();
   const email = 'username';
   const password = '1234';
 
+  const authLogin = jest.fn().mockResolvedValue({ email, password });
   test('snapshot', () => {
-    const { container } = render(<LoginPage />);
+    const { container } = render(
+      <Provider store={mockStore}>
+        <BrowserRouter>
+          <LoginPage />
+        </BrowserRouter>
+      </Provider>
+    );
     expect(container).toMatchSnapshot();
   });
 
@@ -45,30 +44,25 @@ describe('LoginPage', () => {
     const { getByLabelText, getByRole, debug } = render(
       <Provider store={mockStore}>
         <BrowserRouter>
-          <LoginPage></LoginPage>
+          <LoginPage />
         </BrowserRouter>
       </Provider>
     );
+
+    // console.log(debug);
+
     //Select elements
     const emailInput = getByLabelText(/email/);
     const passwordInput = getByLabelText(/password/);
-    const remembermeInput = getByLabelText(/rememberme/);
+    const remembermeInput = getByLabelText(/Rememberme/);
     const buttonSubmit = getByRole('button');
     //Send event
     fireEvent.change(emailInput, { target: { value: email } });
     fireEvent.change(passwordInput, { target: { value: password } });
     fireEvent.change(remembermeInput, { target: { value: true } });
+
     fireEvent.click(buttonSubmit);
     //Check Result
     expect(authLogin).toHaveBeenCalledWith({ email, password });
   });
-
-  // test('should reset error', () => {
-  //   const error = { message: 'This is a error' };
-  //   const OnResetError = jest.fn();
-  //   const { getByText } = render(<LoginPage error={error} onResetError={OnResetError} />);
-  //   const errorField = getByText(error.message);
-  //   fireEvent.click(errorField);
-  //   expect(OnResetError).toHaveBeenCalled();
-  // });
 });

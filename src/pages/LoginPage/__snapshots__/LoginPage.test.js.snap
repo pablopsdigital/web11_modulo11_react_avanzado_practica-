@@ -22,27 +22,32 @@ exports[`LoginPage snapshot 1`] = `
         Login
       </h1>
       <form>
-        <input
-          name="email"
-          placeholder="Enter email"
-          type="email"
-          value=""
-        />
-        <br />
-        <input
-          name="password"
-          placeholder="Enter password"
-          type="password"
-          value=""
-        />
+        <label>
+          email
+          <input
+            name="email"
+            placeholder="Enter email"
+            type="email"
+            value=""
+          />
+        </label>
         <br />
         <label>
+          password
+          <input
+            name="password"
+            placeholder="Enter password"
+            type="password"
+            value=""
+          />
+        </label>
+        <br />
+        <label>
+          Rememberme
           <input
             name="rememberme"
             type="checkbox"
           />
-           
-          Remenber me
         </label>
         <br />
         <button
