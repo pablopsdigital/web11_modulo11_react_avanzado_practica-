@@ -11,7 +11,8 @@ import {
   ADVERTS_LOADED_FAIL,
   ADVERT_LOADED_TAGS_SUCCESS,
   ADVERTS_SET_FILTERS,
-  ADVERTS_DELETE_FILTERS
+  ADVERTS_DELETE_FILTERS,
+  ADVERT_DELETED_SUCCESS
 } from './constants';
 
 export const defaultState = {
@@ -50,6 +51,11 @@ export function adverts(advertsState = defaultState.adverts, action) {
     case ADVERT_LOADED_SUCCESS:
     case ADVERT_CREATED_SUCCESS:
       return { ...advertsState, data: [...advertsState.data, action.payload] };
+    case ADVERT_DELETED_SUCCESS:
+      return {
+        ...advertsState,
+        data: advertsState.data.filter((advert) => advert.id !== action.payload)
+      };
     default:
       return advertsState;
   }
