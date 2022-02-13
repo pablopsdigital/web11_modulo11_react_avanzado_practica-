@@ -24,7 +24,7 @@ import {
   ADVERTS_DELETE_FILTERS
 } from './constants';
 
-import { areAdvertsLoaded, getAdverts } from './selectors';
+import { areAdvertsLoaded, getAdverts, getAdvertsTags } from './selectors';
 
 export function loadAdverts() {
   return async function (dispatch, getState, { api, history }) {
@@ -73,7 +73,10 @@ export function loadTags() {
   return async function (dispatch, getState, { api }) {
     dispatch({ type: ADVERT_LOADED_TAGS_REQUEST });
     try {
-      const tags = await api.getAllTags();
+      var tags = await getState().adverts.tags;
+      if (!tags.length) {
+        tags = await api.getAllTags();
+      }
       dispatch({
         type: ADVERT_LOADED_TAGS_SUCCESS,
         payload: tags
