@@ -25,6 +25,7 @@ exports[`NewAdvertPage snapshot NewAdvertPage 1`] = `
           >
             brand.svg
           </svg>
+          Redux
         </a>
       </div>
       <div
